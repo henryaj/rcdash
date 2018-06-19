@@ -6,4 +6,5 @@ require './user'
 require './botserver'
 require './sniffer'
 
-Thread.new { Sniffer.start_network_sniffing }
+t = Thread.new { Sniffer.start_network_sniffing }
+t.abort_on_exception = true
