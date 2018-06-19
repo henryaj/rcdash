@@ -14,7 +14,7 @@ class User < Sequel::Model
   end
 
   def self.seen_recently_printable
-    seen_recently.map { |u| u.name }.join(", ")
+    seen_recently.map { |u| u.name }
   end
 
   def seen!

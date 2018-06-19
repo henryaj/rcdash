@@ -22,9 +22,14 @@ class BotServer < Sinatra::Base
   end
 
   get "/" do
-    "These Recursers are in the space:\n\n" +
-    User.seen_recently_printable +
-    "\n\ngo say hi or something"
+    "<html><body>
+    <h1>RC Dashboard</h1>
+    <h2>These Recursers are in the space:</h2>
+    <ul>" +
+    User.seen_recently_printable.map { |name| "<li>" + name + "</li>" }.join +
+    "</ul>
+    <p>go say hi or something</p>
+    </body></html>"
   end
 
   def validate_token(token)
