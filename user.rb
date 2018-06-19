@@ -1,5 +1,4 @@
 require 'sequel'
-require 'active_support'
 
 class User < Sequel::Model
   def self.new_from_params(name, zulip_id, email, mac)
