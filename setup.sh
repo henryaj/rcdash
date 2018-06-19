@@ -2,7 +2,7 @@
 
 set -ex
 
-if !which wireshark; then
+if ! which wireshark; then
   sudo apt-get update
   sudo apt-get install -y wireshark 
 fi
@@ -11,5 +11,6 @@ fi
 
 source .envrc
 
-rackup
+bundle install
+bundle exec rackup
 
