@@ -1,6 +1,6 @@
 require 'sequel'
 
-TEN_MINS = Rational(10,24*60)
+AWAY_MINS = Rational(ENV.fetch("USER_AWAY_THRESHOLD", 5),24*60)
 
 class User < Sequel::Model
   def self.new_from_params(name, zulip_id, email, mac)
@@ -10,7 +10,7 @@ class User < Sequel::Model
 
   def self.seen_recently
     # find users seen within the last 10 minutes
-    User.where { |u| u.last_seen > ( DateTime.now - TEN_MINS) }.all
+    User.where { |u| u.last_seen > ( DateTime.now - AWAY_MINS) }.all
   end
 
   def self.seen_recently_printable
