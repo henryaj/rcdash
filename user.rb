@@ -19,8 +19,3 @@ class User < Sequel::Model
     last_seen = DateTime.now
   end
 end
-
-class NilUser
-  def seen!
-  end
-end
