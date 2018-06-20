@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/json'
 require 'json'
+require 'erb'
 
 class BotServer < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
@@ -22,6 +23,8 @@ class BotServer < Sinatra::Base
   end
 
   get "/" do
+    @names = User.seen_recently_printable.map
+    erb :dash, locals: {}
     "<html><body>
     <h1>RC Dashboard</h1>
     <h2>These Recursers are in the space:</h2>
