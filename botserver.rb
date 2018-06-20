@@ -24,15 +24,7 @@ class BotServer < Sinatra::Base
 
   get "/" do
     @names = User.seen_recently_printable.map
-    erb :dash, locals: {}
-    "<html><body>
-    <h1>RC Dashboard</h1>
-    <h2>These Recursers are in the space:</h2>
-    <ul>" +
-    User.seen_recently_printable.map { |name| "<li>" + name + "</li>" }.join +
-    "</ul>
-    <p>go say hi or something</p>
-    </body></html>"
+    erb :dash
   end
 
   def validate_token(token)
