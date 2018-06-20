@@ -3,9 +3,14 @@ require 'sinatra/json'
 require 'json'
 require 'erb'
 
+require './auth'
+
 class BotServer < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
   MAC_ADDRESS_REGEX = /^((([a-fA-F0-9][a-fA-F0-9]+[:]){5})([a-fA-F0-9][a-fA-F0-9])$)|(^([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]+[.]){2}([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]))$/
+
+  enable :sessions
+  set :session_secret, ENV.fetch('SESSION_SECRET')
   
   post "/" do
     body = JSON.parse(request.body.read)
@@ -22,7 +27,32 @@ class BotServer < Sinatra::Base
     )
   end
 
+  post "/macs_seen" do
+    body = JSON.parse(request.body.read)
+    macs = body.fetch("seen")
+
+    macs.each do |mac|
+      u = User.where(mac: mac)
+      if u.any?
+        u.first.seen!
+      end
+    end
+  end
+
+  get "/oauth/redirect" do
+    redirect Auth.authorize
+  end
+
+  get "/oauth/callback" do
+    token = Auth.callback(params[:code])
+    session[:access_token] = token
+    redirect "/"
+  end
+
   get "/" do
+    redirect "/oauth/redirect" unless session[:access_token]
+    redirect "/oauth/redirect" unless Auth.token_valid?(session[:access_token])
+    
     @names = User.seen_recently_printable.map
     erb :dash
   end
