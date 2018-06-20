@@ -1,6 +1,6 @@
 require 'sequel'
-require 'sqlite3'
-DB = Sequel.connect('sqlite://rcdash.db')
+require 'pg'
+DB = Sequel.connect(ENV.fetch("DATABASE_URL"))
 
 require './user'
 require './botserver'
