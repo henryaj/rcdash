@@ -19,7 +19,7 @@ class BotServer < Sinatra::Base
     validate_token(body.fetch("token"))
 
     content = msg.fetch("content")
-    handle_user_creation(
+    handle_message(
       msg.fetch("sender_full_name"),
       msg.fetch("sender_id"),
       msg.fetch("sender_email"),
@@ -53,7 +53,7 @@ class BotServer < Sinatra::Base
     redirect "/oauth/redirect" unless session[:access_token]
     redirect "/oauth/redirect" unless Auth.token_valid?(session[:access_token])
     
-    @names = User.seen_recently_printable.map
+    @names = User.seen_recently
     erb :dash
   end
 
@@ -61,16 +61,29 @@ class BotServer < Sinatra::Base
     raise if token != BotServer::ZULIP_TOKEN
   end
   
-  def handle_user_creation(name, zulip_id, email, content)
+  def handle_message(name, zulip_id, email, content)
+    if content == "forget"
+      return forget_user(zulip_id)
+    end
+
     ok = parse_mac_address(content)
     if !ok
-      return json :response_string => "Hi. Please send me your MAC address and I'll show you on the RC Dashboard when you're in the space."
+      return json :response_string => "Hi. Please send me your MAC address and I'll show you on the RC Dashboard when you're in the space. Or say 'forget' and I'll remove any trace of you from my database."
     end
 
     mac = content.gsub("-", ":") # ensure MAC address is stored in format 00:00:00:00:00:00
     User.new_from_params(name, zulip_id, email, mac)
   
     json :response_string => "Your MAC address has been stored."
+  end
+
+  def forget_user(zulip_id)
+    u = User.where(zulip_id: zulip_id)
+    if u.any?
+      u.destroy 
+      return json :response_string => "Okay - I've removed all your devices from the database. You'll stop showing on the dashboard in a few minutes."
+    else
+      return json :response_string => "Nothing to delete. Looks like you never signed up."
   end
   
   def parse_mac_address(str)
