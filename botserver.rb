@@ -84,6 +84,7 @@ class BotServer < Sinatra::Base
       return json :response_string => "Okay - I've removed all your devices from the database. You'll stop showing on the dashboard in a few minutes."
     else
       return json :response_string => "Nothing to delete. Looks like you never signed up."
+    end
   end
   
   def parse_mac_address(str)
