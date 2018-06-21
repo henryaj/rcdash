@@ -1,0 +1,39 @@
+%html
+  %head
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    -# %link{:rel => "stylesheet", :href => "https://bootswatch.com/4/cyborg/bootstrap.min.css"}
+    %link{:rel => "stylesheet", :href => "style.css"}
+  %body
+    .container
+      .row
+        .col-md-8.col-md-offset-2.col-sm-12.pt-5
+          %h1
+            Who's at RC? <i class="fas fa-rss"></i>
+          %h4.text-muted.pt-2 These Recursers are in the space:
+          %ul.names-list.pt-2
+            - @users.each do |user|
+              %li
+                %h4
+                  = user.name
+          %br
+          %p
+            %em
+              = @registered_users
+              users registered,  
+              = @users.length
+              users online now
+          %a{:href => "https://recurse.zulipchat.com/#narrow/pm-with/119739-thenewrcdash-bot"}
+            %button.btn.btn-primary{:type => "button"}
+              Sign up
+          %button.btn.btn-info{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#explainerBox", :"aria-expanded" => "false", :"aria-controls" => "explainerBox"}
+            How does this work?
+          .collapse.pt-2#explainerBox
+            %ol
+              %li You find the MAC address of your phone or laptop, and tell the Zulip bot what it is.
+              %li The bot adds a record, associating your Zulip user with that MAC address.
+              %li The Raspberry Pi in the space sniffs all packets for 15 seconds every minute. From the packets it gets a list of all the unique MAC addresses it saw, and sends them to the server.
+              %li The server updates the <code>last_seen</code> entry for any user records that match those MAC addresses.

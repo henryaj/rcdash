@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/json'
 require 'json'
-require 'erb'
+require 'haml'
 
 require './auth'
 
@@ -55,7 +55,7 @@ class BotServer < Sinatra::Base
     
     @users = User.seen_recently
     @registered_users = User.all.count
-    erb :dash
+    haml :dash
   end
 
   def validate_token(token)

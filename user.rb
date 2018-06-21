@@ -9,6 +9,8 @@ class User < Sequel::Model
   end
 
   def self.seen_recently
+    return User.all if ENV["RACK_ENV"] == "development"
+
     # find users seen within the last 10 minutes
     User.where { |u| u.last_seen > ( DateTime.now - AWAY_MINS) }.all
   end
