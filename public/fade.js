@@ -23,7 +23,8 @@ function refreshData() {
 }
 
 $(document).ready(function() {
-  logoFadeInOut();
-  setTimeout(function() {logoFadeInOut()}, 5000);
-  setTimeout(function() {refreshData()}, 5000)
+  logoFadeInOut()
+
+  setInterval(logoFadeInOut(), 8000);
+  setInterval(refreshData(), 60000)
 })
