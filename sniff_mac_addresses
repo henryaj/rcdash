@@ -4,7 +4,7 @@ require 'json'
 require 'net/http'
 
 loop do
-  `tshark -Tfields -e eth.addr -a duration:15 > capture.tmp`
+  `sudo tshark -Tfields -e eth.addr -a duration:15 > capture.tmp`
   `uniq capture.tmp > uniqcapture.tmp`
 
   uniq_capture = File.read("uniqcapture.tmp").split("\n")
@@ -14,11 +14,12 @@ loop do
   payload = {"seen" => uniq_macs}
 
   uri = URI('https://rcdash.herokuapp.com/macs_seen')
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = (uri.scheme == "https")
   req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   req.body = payload.to_json
-  res = Net::HTTP.start(uri.hostname, uri.port) do |http|
-    http.request(req)
-  end
+  
+  response = http.request(req)
 
-  sleep 45
+  sleep 60
 end
