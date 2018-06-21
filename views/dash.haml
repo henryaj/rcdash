@@ -22,19 +22,29 @@
           %br
           %p
             %em
-              = @registered_users
+              %span#registeredUsersCount
+                = @registered_users
               users registered,  
-              = @users.length
+              %span#onlineUsersCount
+                = @users.length
               users online now
           %a{:href => "https://recurse.zulipchat.com/#narrow/pm-with/119739-thenewrcdash-bot"}
             %button.btn.btn-primary{:type => "button"}
-              Sign up
+              Sign up <i class="fas fa-external-link-alt"></i>
           %button.btn.btn-info{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#explainerBox", :"aria-expanded" => "false", :"aria-controls" => "explainerBox"}
             How does this work?
+          %button.btn.btn-warning{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#helpBox", :"aria-expanded" => "false", :"aria-controls" => "helpBox"}
+            Help!
           .collapse.pt-2#explainerBox
             %ol
               %li You find the MAC address of your phone or laptop, and tell the Zulip bot what it is.
               %li The bot adds a record, associating your Zulip user with that MAC address.
               %li The Raspberry Pi in the space sniffs all packets for 15 seconds every minute. From the packets it gets a list of all the unique MAC addresses it saw, and sends them to the server.
               %li The server updates the <code>last_seen</code> entry for any user records that match those MAC addresses.
+          .collapse.pt-2#helpBox
+            %p If you aren't showing up in the list and you think you ought to be:
+            %ul
+              %li Make sure your device is powered on and connected to the Recurse Center wi-fi network. If your machine is off/sleeping or disconnected, it won't show up.
+              %li Packets are only sniffed for 15 seconds every minute. Wait a minute or two after registering for your device to be registered.
+              %li It's possible the packet sniffer has died. If you're feeling adventurous, SSH into the Raspberry Pi in the main space, run <code>screen -r</code> and see what's happened. Otherwise <a href="mailto:henry@henrystanley.com">email Henry</a> for help :)
     %script{:src => "fade.js"}

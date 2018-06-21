@@ -58,6 +58,13 @@ class BotServer < Sinatra::Base
     haml :dash
   end
 
+  get "/users" do
+    return status 401 unless session[:access_token] && Auth.token_valid?(session[:access_token])
+
+    @users = User.seen_recently.map { |u| u.name }
+    json :users => @users, :registered_users => User.all.count
+  end
+
   def validate_token(token)
     raise if token != BotServer::ZULIP_TOKEN
   end
