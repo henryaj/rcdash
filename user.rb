@@ -22,3 +22,9 @@ class User < Sequel::Model
     save
   end
 end
+
+class NoUser
+  def name
+    "No registered users"
+  end
+end

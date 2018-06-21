@@ -20,7 +20,11 @@ class Auth
   end
 
   def self.token_valid?(token)
-    resp = RestClient.get 'https://www.recurse.com/api/v1/profiles/me', {:Authorization => "Bearer #{token}"}
-    resp.code == 200
+    begin
+      resp = RestClient.get 'https://www.recurse.com/api/v1/profiles/me', {:Authorization => "Bearer #{token}"}
+      return resp.code == 200  
+    rescue RestClient::Unauthorized
+      return false
+    end
   end
 end

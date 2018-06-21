@@ -53,7 +53,7 @@ class BotServer < Sinatra::Base
     redirect "/oauth/redirect" unless session[:access_token]
     redirect "/oauth/redirect" unless Auth.token_valid?(session[:access_token])
     
-    @names = User.seen_recently
+    @users = User.seen_recently
     erb :dash
   end
 
