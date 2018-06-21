@@ -12,7 +12,8 @@
       .row
         .col-md-8.col-md-offset-2.col-sm-12.pt-5
           %h1
-            Who's at RC? <i id="fadelogo" class="fas fa-rss"></i>
+          <h1> Who's at RC? <i id="fadelogo" class="fas fa-rss" data-container="body" data-toggle="popover" data-placement="right" data-content="Page updates automatically" data-trigger="hover"></i>
+
           %h4.text-muted.pt-2 These Recursers are in the space:
           %ul.names-list.pt-2
             - @users.each do |user|

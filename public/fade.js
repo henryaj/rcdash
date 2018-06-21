@@ -23,6 +23,10 @@ function refreshData() {
 }
 
 $(document).ready(function() {
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+  
   logoFadeInOut()
 
   setInterval(function() { logoFadeInOut() }, 4500);
