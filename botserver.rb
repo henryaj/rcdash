@@ -78,7 +78,7 @@ class BotServer < Sinatra::Base
   end
 
   def forget_user(zulip_id)
-    u = User.where(zulip_id: zulip_id)
+    u = User.where(zulip_id: zulip_id.to_s)
     if u.any?
       u.destroy 
       return json :response_string => "Okay - I've removed all your devices from the database. You'll stop showing on the dashboard in a few minutes."
