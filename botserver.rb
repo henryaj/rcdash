@@ -61,7 +61,7 @@ class BotServer < Sinatra::Base
   get "/users" do
     return status 401 unless session[:access_token] && Auth.token_valid?(session[:access_token])
 
-    @users = User.seen_recently.map do |u|
+    @users = User.seen_recently.sort_by { |u| u.name }.map do |u|
       image_url, profile_url = Auth.get_user_details(u.email, session[:access_token])
       {name: u.name, image_url: image_url, profile_url: profile_url}
     end
