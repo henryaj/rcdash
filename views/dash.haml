@@ -19,18 +19,14 @@
 
           %h4.text-muted.pt-2 These Recursers are in the space:
           %ul.names-list.pt-2
-            - @users.each do |user|
-              %li
-                %h4
-                  = user.name
+            %li
+              %em Loading...
           %br
           %p
             %em
-              %span#registeredUsersCount
-                = @registered_users
+              %span#registeredUsersCount ...
               users registered,  
-              %span#onlineUsersCount
-                = @users.length
+              %span#onlineUsersCount ...
               users online now
           %a{:href => "https://recurse.zulipchat.com/#narrow/pm-with/119739-thenewrcdash-bot"}
             %button.btn.btn-primary{:type => "button"}

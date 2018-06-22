@@ -10,8 +10,14 @@ function refreshData() {
 
     var names = "";
 
-    $.each(data.users, function( _, name ) {
-      el = "<li>" + name + "</li>";
+    $.each(data.users, function( _, user ) {
+      el = `
+<li>
+  <a href='${user.profile_url}'>
+  <img height=50 src='${user.image_url}' class='rounded'>
+    ${user.name}
+  </a>
+</li>`;
       names += el;
     });
 
@@ -27,7 +33,7 @@ $(document).ready(function() {
     $('[data-toggle="popover"]').popover()
   })
   
-  logoFadeInOut()
+  refreshData();
 
   setInterval(function() { logoFadeInOut() }, 4500);
   setInterval(function() { refreshData() }, 15000)

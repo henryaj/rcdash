@@ -54,16 +54,18 @@ class BotServer < Sinatra::Base
   get "/" do
     redirect "/oauth/redirect" unless session[:access_token]
     redirect "/oauth/redirect" unless Auth.token_valid?(session[:access_token])
-    
-    @users = User.seen_recently
-    @registered_users = User.all.count
+
     haml :dash
   end
 
   get "/users" do
     return status 401 unless session[:access_token] && Auth.token_valid?(session[:access_token])
 
-    @users = User.seen_recently.map { |u| u.name }
+    @users = User.seen_recently.map do |u|
+      image_url, profile_url = Auth.get_user_details(u.email, session[:access_token])
+      {name: u.name, image_url: image_url, profile_url: profile_url}
+    end
+
     json :users => @users, :registered_users => User.all.count
   end
 

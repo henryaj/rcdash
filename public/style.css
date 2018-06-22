@@ -4,3 +4,7 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
+
+.rounded {
+  border-radius: 100rem!important;
+}
