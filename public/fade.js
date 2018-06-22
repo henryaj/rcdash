@@ -12,7 +12,7 @@ function refreshData() {
 
     $.each(data.users, function( _, user ) {
       el = `
-<li>
+<li class='pt-2'>
   <a href='${user.profile_url}'>
   <img height=50 src='${user.image_url}' class='rounded'>
     ${user.name}
