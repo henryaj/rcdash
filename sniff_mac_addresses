@@ -24,5 +24,4 @@ loop do
   rescue
     puts "Something went wrong! Starting over."
   end
-  sleep 60
 end
