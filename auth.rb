@@ -1,5 +1,6 @@
 require 'oauth2'
 require 'rest-client'
+require 'json'
 
 class Auth
   REDIRECT_URI = "#{ENV.fetch("BASE_URL")}/oauth/callback"
@@ -26,5 +27,16 @@ class Auth
     rescue RestClient::Unauthorized
       return false
     end
+  end
+
+  def self.get_user_details(email, token)
+    response = RestClient.get(
+      "https://www.recurse.com/api/v1/profiles/#{email}", {:Authorization => "Bearer #{token}"}
+    )
+
+    image = JSON.parse(response.body).fetch("image_path")
+    link = "https://recurse.com/directory/" + JSON.parse(response.body).fetch("slug")
+
+    return image, link
   end
 end

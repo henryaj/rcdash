@@ -5,6 +5,8 @@ require 'haml'
 
 require './auth'
 
+DisplayUser = Struct.new(:name, :image_url, :profile_url)
+
 class BotServer < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
   MAC_ADDRESS_REGEX = /^((([a-fA-F0-9][a-fA-F0-9]+[:]){5})([a-fA-F0-9][a-fA-F0-9])$)|(^([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]+[.]){2}([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]))$/
