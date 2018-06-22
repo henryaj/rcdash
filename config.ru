@@ -4,4 +4,4 @@ require './app'
   ENV.fetch(e)
 end
 
-run BotServer
+run Server

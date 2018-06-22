@@ -7,7 +7,7 @@ require './auth'
 
 DisplayUser = Struct.new(:name, :image_url, :profile_url)
 
-class BotServer < Sinatra::Base
+class Server < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
   MAC_ADDRESS_REGEX = /^((([a-fA-F0-9][a-fA-F0-9]+[:]){5})([a-fA-F0-9][a-fA-F0-9])$)|(^([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]+[.]){2}([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]))$/
 
@@ -70,7 +70,7 @@ class BotServer < Sinatra::Base
   end
 
   def validate_token(token)
-    raise if token != BotServer::ZULIP_TOKEN
+    raise if token != Server::ZULIP_TOKEN
   end
   
   def handle_message(name, zulip_id, email, content)
@@ -100,7 +100,7 @@ class BotServer < Sinatra::Base
   end
   
   def parse_mac_address(str)
-    result = BotServer::MAC_ADDRESS_REGEX.match(str)
+    result = Server::MAC_ADDRESS_REGEX.match(str)
     result ? true : false
   end
 end

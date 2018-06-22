@@ -14,4 +14,4 @@ unless DB.table_exists?(:users)
 end
 
 require './user'
-require './botserver'
+require './server'
