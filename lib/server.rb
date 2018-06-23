@@ -6,11 +6,15 @@ require 'haml'
 require 'auth'
 require 'mac'
 
-class Server < Sinatra::Base
+class Server < Sinatra::Application
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
 
   enable :sessions
   set :session_secret, ENV.fetch('SESSION_SECRET')
+
+  def initialize(auth_handler)
+    @auth = auth_handler
+  end
   
   post "/" do
     body = JSON.parse(request.body.read)
@@ -40,27 +44,27 @@ class Server < Sinatra::Base
   end
 
   get "/oauth/redirect" do
-    redirect Auth.authorize
+    redirect @auth.authorize
   end
 
   get "/oauth/callback" do
-    token = Auth.callback(params[:code])
+    token = @auth.callback(params[:code])
     session[:access_token] = token
     redirect "/"
   end
 
   get "/" do
     redirect "/oauth/redirect" unless session[:access_token]
-    redirect "/oauth/redirect" unless Auth.token_valid?(session[:access_token])
+    redirect "/oauth/redirect" unless @auth.token_valid?(session[:access_token])
 
     haml :dash
   end
 
   get "/users" do
-    return status 401 unless session[:access_token] && Auth.token_valid?(session[:access_token])
+    return status 401 unless session[:access_token] && @auth.token_valid?(session[:access_token])
 
     @users = User.seen_recently.sort_by { |u| u.name }.map do |u|
-      image_url, profile_url = Auth.get_user_details(u.email, session[:access_token])
+      image_url, profile_url = @auth.get_user_details(u.email, session[:access_token])
       {name: u.name, image_url: image_url, profile_url: profile_url}
     end
 
