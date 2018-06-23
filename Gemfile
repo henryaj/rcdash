@@ -8,7 +8,12 @@ gem "oauth2"
 gem "rest-client"
 gem "haml"
 
-group :testing do
+group :development do
+  gem "guard"
+  gem "guard-rspec"
+end
+
+group :test do
   gem "rspec"
   gem "rack-test"
 end
