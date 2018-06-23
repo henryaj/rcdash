@@ -4,10 +4,10 @@ require 'json'
 require 'haml'
 
 require 'auth'
+require 'mac'
 
 class Server < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
-  MAC_ADDRESS_REGEX = /^((([a-fA-F0-9][a-fA-F0-9]+[:]){5})([a-fA-F0-9][a-fA-F0-9])$)|(^([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]+[.]){2}([a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]))$/
 
   enable :sessions
   set :session_secret, ENV.fetch('SESSION_SECRET')
@@ -76,12 +76,11 @@ class Server < Sinatra::Base
       return forget_user(zulip_id)
     end
 
-    ok = parse_mac_address(content)
-    if !ok
+    if !Mac.valid?(content)
       return json :response_string => "Hi. Please send me your MAC address and I'll show you on the RC Dashboard when you're in the space. Or say 'forget' and I'll remove any trace of you from my database."
     end
 
-    mac = content.gsub("-", ":") # ensure MAC address is stored in format 00:00:00:00:00:00
+    mac = Mac.normalize(content)
     User.new_from_params(name, zulip_id, email, mac)
   
     json :response_string => "Your MAC address has been stored."
@@ -95,11 +94,6 @@ class Server < Sinatra::Base
     else
       return json :response_string => "Nothing to delete. Looks like you never signed up."
     end
-  end
-  
-  def parse_mac_address(str)
-    result = Server::MAC_ADDRESS_REGEX.match(str)
-    result ? true : false
   end
 end
 
