@@ -5,4 +5,5 @@ require 'app'
   ENV.fetch(e)
 end
 
-run Server
+require 'auth'
+run Server.new(Auth.new)
