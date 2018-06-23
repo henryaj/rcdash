@@ -21,6 +21,8 @@ class Auth
   end
 
   def token_valid?(token)
+    return false unless token
+    
     begin
       resp = RestClient.get 'https://www.recurse.com/api/v1/profiles/me', {:Authorization => "Bearer #{token}"}
       return resp.code == 200  

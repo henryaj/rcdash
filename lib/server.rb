@@ -55,7 +55,6 @@ class Server < Sinatra::Base
   end
 
   get "/" do
-    redirect "/oauth/redirect" unless session[:access_token]
     redirect "/oauth/redirect" unless @auth.token_valid?(session[:access_token])
 
     haml :dash
