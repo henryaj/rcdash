@@ -7,3 +7,8 @@ gem "pg"
 gem "oauth2"
 gem "rest-client"
 gem "haml"
+
+group :testing do
+  gem "rspec"
+  gem "rack-test"
+end
