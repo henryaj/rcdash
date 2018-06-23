@@ -3,7 +3,7 @@ require 'sinatra/json'
 require 'json'
 require 'haml'
 
-require './auth'
+require 'auth'
 
 class Server < Sinatra::Base
   ZULIP_TOKEN = ENV.fetch("ZULIP_SECRET_TOKEN") # used to ensure we're getting requests from Zulip
