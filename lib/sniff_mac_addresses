@@ -3,6 +3,11 @@
 require 'json'
 require 'net/http'
 
+if !system("which tshark")
+  `sudo apt-get update`
+  `sudo apt-get install -y tshark`
+end
+
 loop do
   begin
     `sudo tshark -Tfields -e eth.addr -a duration:15 > capture.tmp`
