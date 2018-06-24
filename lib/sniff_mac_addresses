@@ -10,6 +10,8 @@ loop do
 
     uniq_capture = File.read("uniqcapture.tmp").split("\n")
 
+    `rm capture.tmp uniqcapture.tmp`
+
     uniq_macs = uniq_capture.map { |line| line.split(",").last }
 
     payload = {"seen" => uniq_macs}
