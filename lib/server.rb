@@ -12,7 +12,7 @@ class Server < Sinatra::Base
   enable :sessions
   set :session_secret, ENV.fetch('SESSION_SECRET')
 
-  def initialize(auth_handler)
+  def initialize(auth_handler = Auth.new)
     @auth = auth_handler
     super app
   end

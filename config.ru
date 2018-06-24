@@ -6,4 +6,4 @@ require 'app'
 end
 
 require 'auth'
-run Server.new(Auth.new)
+run Server.new
