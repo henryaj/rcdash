@@ -2,6 +2,8 @@
 
 See who's in the [Recurse Center](https://recurse.com) space, live.
 
+I wrote about this [here](https://recurse.henrystanley.com/post/physical-presence-tracking-mac-addresses/).
+
 ## How does it work?
 
 Packet sniffing. A Raspberry Pi sits in the space, sniffing packets on the RC main network. It gets a list of unique MAC addresses it saw over the last few seconds, and sends it over to the web server.
