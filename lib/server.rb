@@ -85,7 +85,8 @@ class Server < Sinatra::Base
     end
 
     mac = Mac.normalize(content)
-    User.new_from_params(name, zulip_id, email, mac)
+    hashed = Mac.hash(mac)
+    User.new_from_params(name, zulip_id, email, hashed)
   
     json :response_string => "Your MAC address has been stored."
   end

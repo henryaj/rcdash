@@ -2,15 +2,32 @@
 
 require 'json'
 require 'net/http'
+require_relative './mac'
 
 if !system("which tshark")
   `sudo apt-get update`
   `sudo apt-get install -y tshark`
 end
 
+def send_macs(payload)
+  uri = URI('https://rcdash.herokuapp.com/macs_seen')
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = (uri.scheme == "https")
+  req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+  req.body = payload.to_json
+
+  response = http.request(req)
+end
+
+def hash_macs(macs)
+  macs.map do |i|
+    Mac.hash(i)
+  end
+end
+
 loop do
   begin
-    `sudo tshark -Tfields -e eth.addr -a duration:15 > capture.tmp`
+    `sudo tshark -Tfields -e eth.addr -a duration:10 > capture.tmp`
     `uniq capture.tmp > uniqcapture.tmp`
 
     uniq_capture = File.read("uniqcapture.tmp").split("\n")
@@ -18,16 +35,11 @@ loop do
     `rm capture.tmp uniqcapture.tmp`
 
     uniq_macs = uniq_capture.map { |line| line.split(",").last }
+    hashed_macs = hash_macs(uniq_macs)
 
-    payload = {"seen" => uniq_macs}
-
-    uri = URI('https://rcdash.herokuapp.com/macs_seen')
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = (uri.scheme == "https")
-    req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
-    req.body = payload.to_json
-
-    response = http.request(req)
+    send_macs({
+      "seen" => hashed_macs
+    })
   rescue
     puts "Something went wrong! Starting over."
   end
