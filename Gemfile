@@ -7,6 +7,7 @@ gem "pg"
 gem "oauth2"
 gem "rest-client"
 gem "haml"
+gem "rake"
 
 group :development do
   gem "guard"
