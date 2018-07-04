@@ -15,7 +15,11 @@
       .row
         .col-md-8.col-md-offset-2.col-sm-12.pt-5
           %h1
-          <h1> Who's at RC? <i id="fadelogo" class="fas fa-rss" data-container="body" data-toggle="popover" data-placement="right" data-content="Page updates automatically" data-trigger="hover"></i>
+            Who's at RC? <i id="fadelogo" class="fas fa-rss" data-container="body" data-toggle="popover" data-placement="right" data-content="Page updates automatically" data-trigger="hover"></i>
+
+          .pt-2
+            .alert.alert-danger#error-banner{:role => "alert", :hidden => "hidden"}
+              Sorry – something went wrong getting the list of users.
 
           %h4.text-muted.pt-2 These Recursers are in the space:
           %ul.names-list.pt-2
@@ -37,7 +41,10 @@
             Help!
           .collapse.pt-2#explainerBox
             %ol
-              %li You find the MAC address of your phone or laptop, and tell the Zulip bot what it is.
+              %li
+                You find the
+                %a{:href => "https://www.wikihow.com/Find-the-MAC-Address-of-Your-Computer"} MAC address
+                of your laptop, and tell the Zulip bot what it is.
               %li The bot adds a record, associating your Zulip user with that MAC address.
               %li The Raspberry Pi in the space sniffs all packets for 15 seconds every minute. From the packets it gets a list of all the unique MAC addresses it saw, and sends them to the server.
               %li The server updates the <code>last_seen</code> entry for any user records that match those MAC addresses.

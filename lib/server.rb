@@ -12,6 +12,8 @@ class Server < Sinatra::Base
   enable :sessions
   set :session_secret, ENV.fetch('SESSION_SECRET')
 
+  @@sniffer_last_update = Time.now
+
   def initialize(auth_handler = Auth.new)
     @auth = auth_handler
     super app
@@ -35,6 +37,8 @@ class Server < Sinatra::Base
   post "/macs_seen" do
     body = JSON.parse(request.body.read)
     macs = body.fetch("seen")
+
+    @@sniffer_last_update = Time.now
 
     macs.each do |mac|
       u = User.where(mac: mac)
@@ -68,7 +72,7 @@ class Server < Sinatra::Base
       {name: u.name, image_url: image_url, profile_url: profile_url}
     end
 
-    json :users => @users, :registered_users => User.all.count
+    json :users => @users, :registered_users => User.all.count, :status_ok => sniffer_okay?
   end
 
   def validate_token(token)
@@ -99,6 +103,10 @@ class Server < Sinatra::Base
     else
       return json :response_string => "Nothing to delete. Looks like you never signed up."
     end
+  end
+
+  def sniffer_okay?
+    (Time.now - @@sniffer_last_update) < 120
   end
 end
 
