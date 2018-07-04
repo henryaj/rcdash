@@ -26,21 +26,17 @@ def hash_macs(macs)
 end
 
 loop do
-  begin
-    `sudo tshark -Tfields -e eth.addr -a duration:10 > capture.tmp`
-    `uniq capture.tmp > uniqcapture.tmp`
+  `sudo tshark -Tfields -e eth.addr -a duration:10 > capture.tmp`
+  `uniq capture.tmp > uniqcapture.tmp`
 
-    uniq_capture = File.read("uniqcapture.tmp").split("\n")
+  uniq_capture = File.read("uniqcapture.tmp").split("\n")
 
-    `rm capture.tmp uniqcapture.tmp`
+  `rm capture.tmp uniqcapture.tmp`
 
-    uniq_macs = uniq_capture.map { |line| line.split(",").last }
-    hashed_macs = hash_macs(uniq_macs)
+  uniq_macs = uniq_capture.map { |line| line.split(",").last }
+  hashed_macs = hash_macs(uniq_macs)
 
-    send_macs({
-      "seen" => hashed_macs
-    })
-  rescue
-    puts "Something went wrong! Starting over."
-  end
+  send_macs({
+    "seen" => hashed_macs
+  })
 end
