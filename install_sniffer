@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+location="$1"
+if [[ -z $location ]]; then
+  echo "Usage: install_sniffer LOCATION"
+  exit 1
+fi
+
+fullpath="$(realpath "$location")"
+
+cp -R lib "$fullpath"/rcdash_lib
+cp env "$fullpath"/rcdash_lib 
+
+service="[Unit]
+Description=RC Dash listener daemon
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=$fullpath/rcdash_lib
+TimeoutStartSec=0
+EnvironmentFile=$fullpath/rcdash_lib/env
+ExecStart=$fullpath/rcdash_lib/sniff_mac_addresses
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=network.target"
+
+echo "$service" > /lib/systemd/system/rcdash.service
+
+echo 'Installed successfully. Run `systemctl start rcdash` to start.'
