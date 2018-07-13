@@ -11,7 +11,7 @@ fi
 fullpath="$(realpath "$location")"
 
 cp -R lib "$fullpath"/rcdash_lib
-cp env "$fullpath"/rcdash_lib 
+cp env "$fullpath"/rcdash_lib/ 
 
 service="[Unit]
 Description=RC Dash listener daemon
