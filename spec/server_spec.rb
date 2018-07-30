@@ -4,7 +4,7 @@ require 'auth'
 
 describe "server" do
   include Rack::Test::Methods
-  let(:auth_handler) { instance_double(Auth) }
+  let(:auth_handler) { instance_double(AuthHandler) }
 
   def app
     Server.new(auth_handler)

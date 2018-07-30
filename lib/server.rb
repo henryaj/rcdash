@@ -14,7 +14,7 @@ class Server < Sinatra::Base
 
   @@sniffer_last_update = Time.now
 
-  def initialize(auth_handler = Auth.new)
+  def initialize(auth_handler = AuthHandler.new)
     @auth = auth_handler
     super app
   end

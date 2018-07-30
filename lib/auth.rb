@@ -2,7 +2,7 @@ require 'oauth2'
 require 'rest-client'
 require 'json'
 
-class Auth
+class AuthHandler
   REDIRECT_URI = "#{ENV.fetch("BASE_URL")}/oauth/callback"
   CLIENT_ID = ENV.fetch("RC_OAUTH_CLIENT_ID")
   CLIENT_SECRET = ENV.fetch("RC_OAUTH_CLIENT_SECRET")
