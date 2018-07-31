@@ -17,15 +17,15 @@ class AuthHandler
 
   def callback(code)
     oauth_token = client.auth_code.get_token(code, redirect_uri: REDIRECT_URI)
-    return oauth_token.token
+    oauth_token.token
   end
 
   def token_valid?(token)
     return false unless token
-    
+
     begin
       resp = RestClient.get 'https://www.recurse.com/api/v1/profiles/me', {:Authorization => "Bearer #{token}"}
-      return resp.code == 200  
+      return resp.code == 200
     rescue RestClient::Unauthorized
       return false
     end
