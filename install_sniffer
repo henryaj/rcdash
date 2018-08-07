@@ -18,11 +18,11 @@ Description=RC Dash listener daemon
 After=network.target
 
 [Service]
-User=pi
+User=$whoami
 WorkingDirectory=$fullpath/rcdash_lib
 TimeoutStartSec=0
 EnvironmentFile=$fullpath/rcdash_lib/env
-ExecStart=$fullpath/rcdash_lib/sniff_mac_addresses
+ExecStart=$fullpath/rcdash_lib/sniff_mac_addresses.rb
 Restart=always
 RestartSec=3
 
@@ -31,4 +31,4 @@ WantedBy=network.target"
 
 echo "$service" > /lib/systemd/system/rcdash.service
 
-echo 'Installed successfully. Run `systemctl start rcdash` to start.'
+echo 'Installed successfully. Run `systemctl enable rcdash` to start.'

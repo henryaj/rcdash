@@ -16,6 +16,10 @@ To register, users send a message containing their MAC address to a Zulip chatbo
 
 ![](screenshots/main.png)
 
+## Privacy
+
+User MAC addresses are SHA512 hashed with a salt before being stored in the database. The sniffed MAC addresses are hashed and salted with the same salt, so they can be compared to the stored MAC addresses on the server without ever storing a user's plaintext MAC addresses or sending it over the network in the clear.
+
 ## Running
 
 The **web server** runs as a regular 12-factor app. It serves up the frontend, listens for new MAC addresses, and is the endpoint for the Zulip webhook.
@@ -30,7 +34,14 @@ The following environment variables need to be set:
 * `RC_OAUTH_CLIENT_SECRET` - ...and secret
 * `BASE_URL` - URL the site is being hosted at
 * `SESSION_SECRET` - a cryptographically random string used to encrypt user cookies
+* `SALT` - a random value which will be used as a salt when hashing the discovered MAC addresses
 
 The **packet sniffer** needs to run on a machine that's connected to the main RC wi-fi network. It'll pick up packets sent be devices that are connected to that network and are in range.
 
-> `$ ./sniff_mac_addresses`
+To install it, first install tshark, the command-line version of Wireshark:
+
+```
+sudo apt-get update && sudo apt-get install tshark
+```
+
+Then run `./install_sniffer <path_to_install_location>` to install a system service for running the packet sniffer as a daemon.

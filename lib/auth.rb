@@ -24,7 +24,7 @@ class AuthHandler
     return false unless token
 
     begin
-      resp = RestClient.get 'https://www.recurse.com/api/v1/profiles/me', {:Authorization => "Bearer #{token}"}
+      resp = RestClient.get('https://www.recurse.com/api/v1/profiles/me', { Authorization: "Bearer #{token}" })
       return resp.code == 200
     rescue RestClient::Unauthorized
       return false
@@ -33,7 +33,7 @@ class AuthHandler
 
   def get_user_details(email, token)
     response = RestClient.get(
-      "https://www.recurse.com/api/v1/profiles/#{email}", {:Authorization => "Bearer #{token}"}
+      "https://www.recurse.com/api/v1/profiles/#{email}", { Authorization: "Bearer #{token}" }
     )
 
     image = JSON.parse(response.body).fetch("image_path")

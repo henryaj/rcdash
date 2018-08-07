@@ -58,20 +58,17 @@ class Server < Sinatra::Base
   get "/users" do
     return status 401 unless session[:access_token] && @auth.token_valid?(session[:access_token])
 
-    json :users => generate_user_list,
-         :registered_users => User.all.count,
-         :status_ok => sniffer_okay?
+    json users: generate_user_list,
+         registered_users: User.all.count,
+         status_ok: sniffer_okay?
   end
 
   def generate_user_list
-    sorted_users = User.seen_recently.sort_by { |u| u.name }.map
-    
-    user_data = sorted_users.map do |u|
-      image_url, profile_url = @auth.get_user_details(u.email, session[:access_token])
-      {name: u.name, image_url: image_url, profile_url: profile_url}
+    User.seen_recently.sort_by { |u| u.name }
+      .map do |u|
+        image_url, profile_url = @auth.get_user_details(u.email, session[:access_token])
+        {name: u.name, image_url: image_url, profile_url: profile_url}
     end
-
-    return user_data
   end
 
   def sniffer_okay?

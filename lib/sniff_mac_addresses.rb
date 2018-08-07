@@ -5,8 +5,8 @@ require 'net/http'
 require_relative './mac'
 
 if !system("which tshark")
-  `sudo apt-get update`
-  `sudo apt-get install -y tshark`
+  puts "Unable to find tshark. Make sure 'tshark' is installed and on your PATH before running."
+  exit 1
 end
 
 def send_macs(payload)
@@ -16,7 +16,7 @@ def send_macs(payload)
   req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   req.body = payload.to_json
 
-  response = http.request(req)
+  http.request(req)
 end
 
 def hash_macs(macs)
