@@ -1,0 +1,79 @@
+plugins:
+  - rubocop-rspec
+  - rubocop-sequel
+
+AllCops:
+  TargetRubyVersion: 3.4
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - ".git/**/*"
+    - "Guardfile"
+
+# Style preferences
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/Documentation:
+  Enabled: false
+
+# Metrics adjustments
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "Rakefile"
+
+Metrics/MethodLength:
+  Max: 15
+
+# RSpec configurations
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/server_spec.rb"
+    - "spec/zulip_spec.rb"
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/IdenticalEqualityAssertion:
+  Enabled: false
+
+RSpec/ReceiveMessages:
+  Enabled: false
+
+RSpec/MultipleDescribes:
+  Enabled: false
+
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - "spec/**/*"
+    - "lib/mac.rb"
+    - "lib/zulip.rb"
+
+# Sequel-specific
+Sequel/SaveChanges:
+  Enabled: true

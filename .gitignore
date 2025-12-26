@@ -1,1 +1,19 @@
 .envrc
+
+# Coverage reports
+coverage/
+
+# RuboCop cache
+.rubocop-cache/
+
+# Brakeman output
+brakeman-output.json
+
+# Editor files
+.idea/
+*.swp
+*.swo
+*~
+
+# Test artifacts
+rspec-results.json

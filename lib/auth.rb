@@ -1,14 +1,16 @@
-require 'oauth2'
-require 'rest-client'
-require 'json'
+# frozen_string_literal: true
+
+require "oauth2"
+require "rest-client"
+require "json"
 
 class AuthHandler
-  REDIRECT_URI = "#{ENV.fetch("BASE_URL")}/oauth/callback"
+  REDIRECT_URI = "#{ENV.fetch('BASE_URL')}/oauth/callback".freeze
   CLIENT_ID = ENV.fetch("RC_OAUTH_CLIENT_ID")
   CLIENT_SECRET = ENV.fetch("RC_OAUTH_CLIENT_SECRET")
 
   def client
-    @client ||= OAuth2::Client.new(CLIENT_ID, CLIENT_SECRET, site: 'https://www.recurse.com')
+    @client ||= OAuth2::Client.new(CLIENT_ID, CLIENT_SECRET, site: "https://www.recurse.com")
   end
 
   def authorize
@@ -24,10 +26,10 @@ class AuthHandler
     return false unless token
 
     begin
-      resp = RestClient.get('https://www.recurse.com/api/v1/profiles/me', { Authorization: "Bearer #{token}" })
-      return resp.code == 200
+      resp = RestClient.get("https://www.recurse.com/api/v1/profiles/me", { Authorization: "Bearer #{token}" })
+      resp.code == 200
     rescue RestClient::Unauthorized
-      return false
+      false
     end
   end
 
@@ -36,9 +38,10 @@ class AuthHandler
       "https://www.recurse.com/api/v1/profiles/#{email}", { Authorization: "Bearer #{token}" }
     )
 
-    image = JSON.parse(response.body).fetch("image_path")
-    link = "https://recurse.com/directory/" + JSON.parse(response.body).fetch("slug")
+    parsed = JSON.parse(response.body)
+    image = parsed.fetch("image_path")
+    link = "https://recurse.com/directory/#{parsed.fetch('slug')}"
 
-    return image, link
+    [image, link]
   end
 end

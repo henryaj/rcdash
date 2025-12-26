@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require "json"
 
@@ -14,8 +16,8 @@ describe "Zulip handler" do
   it "prompts the user to save their MAC address" do
     response = ZulipHandler.new(payload).respond
     expect(response).to eq({
-      :response_string => "Hi. Please send me your MAC address and I'll show you on the RC Dashboard when you're in the space. Or say 'forget' and I'll remove any trace of you from my database."
-    })
+                             response_string: "Hi. Please send me your MAC address and I'll show you on the RC Dashboard when you're in the space. Or say 'forget' and I'll remove any trace of you from my database."
+                           })
   end
 
   context "when the user sends a valid MAC address" do
@@ -31,7 +33,7 @@ describe "Zulip handler" do
       allow(User).to receive(:new_from_params).and_return(nil)
       allow(Mac).to receive(:hash).and_return(hashed_mac)
     end
-    
+
     it "creates a new user with the MAC address hashed and salted" do
       ZulipHandler.new(payload).respond
       expect(User).to have_received(:new_from_params).with(sender_name, sender_zulip_id, sender_email, hashed_mac)
@@ -40,8 +42,8 @@ describe "Zulip handler" do
     it "returns a message" do
       response = ZulipHandler.new(payload).respond
       expect(response).to eq({
-        :response_string => "Your MAC address has been stored."
-      })
+                               response_string: "Your MAC address has been stored."
+                             })
     end
   end
 
@@ -50,7 +52,7 @@ describe "Zulip handler" do
 
     before do
       allow(User).to receive(:where).and_return([])
-      allow(User).to receive(:where).with({zulip_id: "5"}).and_return(fake_user)
+      allow(User).to receive(:where).with({ zulip_id: "5" }).and_return(fake_user)
       allow(fake_user).to receive(:any?).and_return(true)
       allow(fake_user).to receive(:destroy)
     end
@@ -61,8 +63,8 @@ describe "Zulip handler" do
       it "deletes the user" do
         response = ZulipHandler.new(payload).respond
         expect(response).to eq({
-          :response_string => "Okay - I've removed all your devices from the database. You'll stop showing on the dashboard in a few minutes."
-        })
+                                 response_string: "Okay - I've removed all your devices from the database. You'll stop showing on the dashboard in a few minutes."
+                               })
         expect(fake_user).to have_received(:destroy)
       end
     end
@@ -73,8 +75,8 @@ describe "Zulip handler" do
       it "returns an error message" do
         response = ZulipHandler.new(payload).respond
         expect(response).to eq({
-          :response_string => "Nothing to delete. Looks like you never signed up."
-        })
+                                 response_string: "Nothing to delete. Looks like you never signed up."
+                               })
       end
     end
   end

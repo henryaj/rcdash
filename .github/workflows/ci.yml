@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  SALT: test_salt_for_ci
+  ZULIP_SECRET_TOKEN: test_zulip_token
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/rcdash_test
+  RC_OAUTH_CLIENT_ID: test_client_id
+  RC_OAUTH_CLIENT_SECRET: test_client_secret
+  BASE_URL: http://localhost:9292
+  SESSION_SECRET: test_session_secret_at_least_64_chars_long_for_security_purposes
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.7"
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --format github
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.7"
+          bundler-cache: true
+
+      - name: Run Brakeman
+        run: bundle exec brakeman -q --no-pager --force
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rcdash_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.7"
+          bundler-cache: true
+
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
+      - name: Run tests with coverage
+        run: COVERAGE=true bundle exec rspec --format documentation
+        env:
+          RACK_ENV: test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/

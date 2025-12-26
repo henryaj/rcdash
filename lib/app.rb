@@ -1,5 +1,7 @@
-require 'sequel'
-require 'pg'
+# frozen_string_literal: true
+
+require "sequel"
+require "pg"
 DB = Sequel.connect(ENV.fetch("DATABASE_URL"))
 
 unless DB.table_exists?(:users)
@@ -13,5 +15,5 @@ unless DB.table_exists?(:users)
   end
 end
 
-require 'user'
-require 'server'
+require "user"
+require "server"

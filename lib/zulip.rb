@@ -1,5 +1,7 @@
-require 'user'
-require 'mac'
+# frozen_string_literal: true
+
+require "user"
+require "mac"
 
 # For interacting with Zulip's webhook API.
 class ZulipHandler
@@ -7,7 +9,7 @@ class ZulipHandler
     @message_json = message_json
   end
 
-  def respond()
+  def respond
     message = parsed_json.fetch("message")
     token = parsed_json.fetch("token")
 
@@ -31,7 +33,7 @@ class ZulipHandler
   attr_reader :message_json, :sender_zulip_id, :sender_name, :sender_email, :content
 
   def zulip_secret_token
-    @zulip_token ||= ENV.fetch("ZULIP_SECRET_TOKEN")
+    @zulip_secret_token ||= ENV.fetch("ZULIP_SECRET_TOKEN")
   end
 
   def parsed_json
@@ -65,6 +67,6 @@ class ZulipHandler
   end
 
   def zulip_message(msg)
-    {:response_string => msg}
+    { response_string: msg }
   end
 end

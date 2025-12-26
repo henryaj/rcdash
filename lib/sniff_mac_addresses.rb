@@ -1,19 +1,20 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require 'json'
-require 'net/http'
-require_relative './mac'
+require "json"
+require "net/http"
+require_relative "mac"
 
-if !system("which tshark")
+unless system("which tshark")
   puts "Unable to find tshark. Make sure 'tshark' is installed and on your PATH before running."
   exit 1
 end
 
 def send_macs(payload)
-  uri = URI('https://rcdash.herokuapp.com/macs_seen')
+  uri = URI("https://rcdash.herokuapp.com/macs_seen")
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = (uri.scheme == "https")
-  req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+  req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
   req.body = payload.to_json
 
   http.request(req)
@@ -37,6 +38,6 @@ loop do
   hashed_macs = hash_macs(uniq_macs)
 
   send_macs({
-    "seen" => hashed_macs
-  })
+              "seen" => hashed_macs
+            })
 end
